@@ -881,13 +881,32 @@ class cHintData {
 
 		const vector<string> getNymsMy();
 		const vector<string> getNymsHis();
-		bool isMemberOfBook ( const vector<string> );
+		bool isMemberOfBook ();
+		std::find(mHintData->getNymsMy().begin(), mHintData->getNymsMy().end(), cmdArgs.at(0)) != mHintData->getNymsMy().end())
 };
 
 cHintData::cHintData()
 : mNymsMy_loaded(false)
 {
 }
+
+class cManagerCfg  {
+	public:
+		bool mContinueOnMissing;
+		bool ShowWarning;
+
+		cManagerCfg();
+
+};
+
+cManagerCfg::cManagerCfg(){
+
+	bool mContinueOnMissing = false;
+	bool ShowWarning = false;
+
+}
+
+
 
 
 const vector<string> cHintData::getNymsMy() {
@@ -945,11 +964,16 @@ const vector<string> cHintData::getNymsHis() {
 	return mNymsHis_str;
 }
 
-bool isMemberOfBook ( const vector<string> MyNym){
-	bool is = 0;
-}
+	bool isMemberOfBook (){
+
+		mHintData->getNymsMy() = a;
+
+		find(a.begin(), a.end(), cmdArgs.at(0))  != a.end();
 
 
+	}
+
+//std::find(mHintData->getNymsMy().begin(), mHintData->getNymsMy().end(), cmdArgs.at(0)) != mHintData->getNymsMy().end())
 
 
 
@@ -960,6 +984,8 @@ class cHintManager {
 
 	public:
 		cHintManager();
+		cManagerCfg *ManagerConfig;
+		void CompletionFail() const;
 
 		vector<string> AutoComplete(const string &sofar_str) const; // the main function to auto-complete. The command line after "ot ", e.g. "msg send al"
 		vector<string> AutoCompleteEntire(const string &sofar_str) const; // the same, but takes entire command line including "ot ", e.g. "ot msg send al"
@@ -969,9 +995,16 @@ class cHintManager {
 		unique_ptr<cHintData> mHintData;
 };
 
+void cHintManager::CompletionFail() const{
+
+	cerr << "Error" << endl;
+
+}
+
 cHintManager::cHintManager()
-: mHintData(new cHintData)
-{ }
+: mHintData(new cHintData){
+	ManagerConfig = new cManagerCfg();
+}
 
 vector<string> cHintManager::AutoCompleteEntire(const string &sofar_str) const {
 	const std::string cut_begining="ot "; // minimal begining
@@ -1173,8 +1206,11 @@ vector<string> cHintManager::BuildTreeOfCommandlines(const string &sofar_str, bo
 			}
 		}
 		if (full_words<4) { // we work on word3 - var1
-			if (cmdArgs.at(0)=="<mynym>") {
+			if (ManagerConfig->mContinueOnMissing || isMemberOfBook(){
 				return WordsThatMatch(  current_word  ,  vector<string>{"<hisnym>"} ); //TODO otlib
+			}
+			else{
+				CompletionFail();
 			}
 		}
 		if (full_words<5) { // we work on word4 - var2
